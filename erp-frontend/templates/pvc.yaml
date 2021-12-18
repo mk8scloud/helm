@@ -1,0 +1,15 @@
+{{- if .Values.persistentVolumeClaim.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "erp-frontenmd.fullname" . }}-frontend-pvc
+  labels:
+        {{- include "erp-frontenmd.selectorLabels" . | nindent 8 }}
+spec:
+  accessModes:
+    - {{ .Values.persistentVolumeClaim.accessModes }}
+  storageClassName: {{ .Values.persistentVolumeClaim.name }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeClaim.requests.storage }}
+{{- end }}
