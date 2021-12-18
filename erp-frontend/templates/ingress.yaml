@@ -13,7 +13,8 @@ spec:
   tls:
   - hosts:
     - {{ .Release.Name }}.{{ .Values.ingress.domain }}
-    secretName:  {{ include "erp-frontenmd.fullname" . }}-{{ .Values.ingress.domain | replace "." "-"}}
+    #secretName:  {{ include "erp-frontenmd.fullname" . }}-{{ .Values.ingress.domain | replace "." "-"}}
+    secretName:  {{ include "erp-frontenmd.fullname" . }}.{{ .Values.ingress.domain }}
   rules:
   - host: {{ .Release.Name }}.{{ .Values.ingress.domain }}
     http:
