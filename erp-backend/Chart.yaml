@@ -1,6 +1,6 @@
 apiVersion: v2
-name: erp-frontend
-description: Erp Frontend chart
+name: erp-backend
+description: Erp Backend chart
 
 # A chart can be either an 'application' or a 'library' chart.
 #

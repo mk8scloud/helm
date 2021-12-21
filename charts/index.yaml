@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  erp-backend:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-12-21T10:18:41.111159+01:00"
+    description: Erp Backend chart
+    digest: 42ea8ef22b254b5cb3b6085e9fd4a5da6e94df51d5a151bcf6dd3b0a1a497cc4
+    name: erp-backend
+    type: application
+    urls:
+    - erp-backend-1.0.tgz
+    version: "1.0"
+  erp-frontend:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-12-21T10:18:41.111597+01:00"
+    description: Erp Frontend chart
+    digest: 12ea739f6772d9962834a7f4a16b663f0339fc62475616bb9e652fe62a9cebab
+    name: erp-frontend
+    type: application
+    urls:
+    - erp-frontend-1.0.tgz
+    version: "1.0"
+generated: "2021-12-21T10:18:41.109638+01:00"

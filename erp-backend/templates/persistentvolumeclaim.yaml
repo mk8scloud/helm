@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "erp-frontend.fullname" . }}-frontend-pvc
+  name: {{ include "erp-backend.fullname" . }}
   labels:
-        {{- include "erp-frontend.selectorLabels" . | nindent 8 }}
+        {{- include "erp-backend.selectorLabels" . | nindent 8 }}
 spec:
   accessModes:
     - {{ .Values.persistentVolumeClaim.accessModes }}

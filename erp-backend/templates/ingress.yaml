@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "erp-frontend.fullname" . }}
+  name: {{ include "erp-backend.fullname" . }}
   labels:
-    {{- include "erp-frontend.labels" . | nindent 4 }}
+    {{- include "erp-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,8 +13,8 @@ spec:
   tls:
   - hosts:
     - {{ .Release.Name }}.{{ .Values.ingress.domain }}
-    #secretName:  {{ include "erp-frontend.fullname" . }}-{{ .Values.ingress.domain | replace "." "-"}}
-    secretName:  {{ include "erp-frontend.fullname" . }}.{{ .Values.ingress.domain }}
+    #secretName:  {{ include "erp-backend.fullname" . }}-{{ .Values.ingress.domain | replace "." "-"}}
+    secretName:  {{ include "erp-backend.fullname" . }}.{{ .Values.ingress.domain }}
   rules:
   - host: {{ .Release.Name }}.{{ .Values.ingress.domain }}
     http:
@@ -23,7 +23,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "erp-frontend.fullname" . }}
+            name: {{ include "erp-backend.fullname" . }}
             port:
-              number: 80
+              number: {{ .Values.service.port }}
 {{- end }}

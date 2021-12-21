@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "erp-frontend.fullname" . }}
+  name: {{ include "erp-backend.fullname" . }}
   labels:
-    {{- include "erp-frontend.labels" . | nindent 4 }}
+    {{- include "erp-backend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "erp-frontend.selectorLabels" . | nindent 6 }}
+      {{- include "erp-backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,32 +18,36 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "erp-frontend.selectorLabels" . | nindent 8 }}
+        {{- include "erp-backend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "erp-frontend.serviceAccountName" . }}
+      serviceAccountName: {{ include "erp-backend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "erp-frontend.fullname" . }}
+        - name: {{ include "erp-backend.fullname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          lifecycle:
-           postStart:
-            exec:
-             command: ["/bin/sh", "-c" , "/bin/sed -i \"s|var address =.*|var address = 'https://{{ .Release.Name | replace "frontend" "backend" }}.{{ .Values.ingress.domain }}';|g\" /usr/share/nginx/html/serviceurl.js"] 
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 44343
               protocol: TCP
           env:
-            - name: BACKEND_SERVICEURL
-              value: https://{{ include "erp-frontend.fullname" . }}-backend-{{ .Values.ingress.domain }}
+            - name: POSTGRES_CONSTR
+              valueFrom:
+               secretKeyRef:
+                name: erp-backend
+                key: pg-connection-string
+            - name: PERSISTENT_PATH
+              value: "/app/JS_PERSISTENT_FILES_DIRECTORY/"
+          volumeMounts:
+          - name: {{ include "erp-backend.fullname" . }}
+            mountPath: "/app/JS_PERSISTENT_FILES_DIRECTORY/"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -58,3 +62,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: {{ include "erp-backend.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ include "erp-backend.fullname" . }}

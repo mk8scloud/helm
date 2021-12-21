@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "erp-frontenmd.fullname" . }}
+  name: {{ include "erp-frontend.fullname" . }}
   labels:
-    {{- include "erp-frontenmd.labels" . | nindent 4 }}
+    {{- include "erp-frontend.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "erp-frontenmd.selectorLabels" . | nindent 4 }}
+    {{- include "erp-frontend.selectorLabels" . | nindent 4 }}
